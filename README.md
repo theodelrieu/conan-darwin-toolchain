@@ -7,7 +7,13 @@ Build require to cross build to any darwin platform.
 
 ## Setup
 
+This package **REQUIRES** Xcode to be installed.
+
+In the future, it might be added as a build_requirement.
+
 Create a profile for cross building and including this toolchain:
+
+### iOS
 
 **ios_profile**
     
@@ -25,6 +31,9 @@ Create a profile for cross building and including this toolchain:
 Go to your project and cross-build your dependency tree with this toolchain:
 
     conan install . --profile ios_profile
+
+
+### Other platforms
 
 This toolchain works with every darwin platform (macOS/iOS/tvOS/watchOS).
 
