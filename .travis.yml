@@ -1,0 +1,24 @@
+
+env:
+   global:
+     - CONAN_REFERENCE: "darwin-toolchain/1.0"
+     - CONAN_USERNAME: "theodelrieu"
+     - CONAN_LOGIN_USERNAME: "theodelrieu"
+     - CONAN_CHANNEL: "testing"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/conan-community/conan"
+     - CONAN_STABLE_BRANCH_PATTERN: "release/*"
+
+osx: &osx
+   os: osx
+   language: generic
+   osx_image: xcode9.3
+   env: CONAN_APPLE_CLANG_VERSIONS=9.1
+
+
+install:
+  - chmod +x .travis/install.sh
+  - ./.travis/install.sh
+
+script:
+  - chmod +x .travis/run.sh
+  - ./.travis/run.sh

@@ -1,0 +1,4 @@
+build
+*.pyc
+.ropeproject
+tmp
