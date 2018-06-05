@@ -14,7 +14,6 @@ osx: &osx
    osx_image: xcode9.3
    env: CONAN_APPLE_CLANG_VERSIONS=9.1
 
-
 install:
   - chmod +x .travis/install.sh
   - ./.travis/install.sh
