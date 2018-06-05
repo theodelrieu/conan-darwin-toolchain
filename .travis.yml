@@ -7,7 +7,7 @@ env:
      - CONAN_USERNAME: "theodelrieu"
      - CONAN_LOGIN_USERNAME: "theodelrieu"
      - CONAN_CHANNEL: "testing"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/conan-community/conan"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/theodelrieu/conan-repo"
      - CONAN_STABLE_BRANCH_PATTERN: "release/*"
 
 install:
