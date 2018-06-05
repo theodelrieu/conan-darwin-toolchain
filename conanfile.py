@@ -12,6 +12,7 @@ class DarwinToolchainConan(ConanFile):
     options = {"bitcode": [True, False]}
     default_options = "bitcode=True"
     description = "Darwin toolchain to (cross) compile macOS/iOS/watchOS/tvOS"
+    url = "https://www.github.com/theodelrieu/conan-darwin-tooolchain"
     build_policy = "missing"
 
     def config_options(self):
