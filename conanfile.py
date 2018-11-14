@@ -6,7 +6,7 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0"
+    version = "1.0.1"
     license = "Apple"
     settings = "os", "arch", "build_type"
     options = {"bitcode": [True, False]}
@@ -71,6 +71,8 @@ class DarwinToolchainConan(ConanFile):
         self.env_info.CFLAGS = cflags_str
         self.env_info.CXXFLAGS = cflags_str
         self.env_info.LDFLAGS = ldflags_str
+        # Fixes macOS Mojave (10.14) builds which appends the macOS sysroot to compiler flags.
+        self.env_info.SDKROOT = sysroot
 
     def package_id(self):
         self.info.header_only()
