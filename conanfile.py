@@ -6,7 +6,7 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.1"
+    version = "1.0.2"
     license = "Apple"
     settings = "os", "arch", "build_type"
     options = {"bitcode": [True, False]}
@@ -63,12 +63,14 @@ class DarwinToolchainConan(ConanFile):
         cflags_str = " ".join(cflags)
         ldflags_str = " ".join(link_flags)
         self.env_info.CC = xcrun.cc
+        self.env_info.CPP = "%s -E" % xcrun.cc
         self.env_info.CXX = xcrun.cxx
         self.env_info.AR = xcrun.ar
         self.env_info.RANLIB = xcrun.ranlib
         self.env_info.STRIP = xcrun.strip
 
         self.env_info.CFLAGS = cflags_str
+        self.env_info.CPPFLAGS = cflags_str
         self.env_info.CXXFLAGS = cflags_str
         self.env_info.LDFLAGS = ldflags_str
         # Fixes macOS Mojave (10.14) builds which appends the macOS sysroot to compiler flags.
