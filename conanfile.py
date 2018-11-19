@@ -1,12 +1,13 @@
 from conans import ConanFile, tools
 
+import os
 import platform
 import copy
 
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.2"
+    version = "1.0.3"
     license = "Apple"
     settings = "os", "arch", "build_type"
     options = {"bitcode": [True, False]}
@@ -14,6 +15,13 @@ class DarwinToolchainConan(ConanFile):
     description = "Darwin toolchain to (cross) compile macOS/iOS/watchOS/tvOS"
     url = "https://www.github.com/theodelrieu/conan-darwin-tooolchain"
     build_policy = "missing"
+    exports_sources = "darwin-toolchain.cmake"
+
+    @property
+    def cmake_system_name(self):
+        if self.settings.os == "Macos":
+            return "macOS"
+        return str(self.settings.os)
 
     def config_options(self):
         # build_type is only useful for bitcode
@@ -28,9 +36,17 @@ class DarwinToolchainConan(ConanFile):
             raise Exception("os must be an Apple os")
         if self.settings.os in ["watchOS", "tvOS"] and not self.options.bitcode:
             raise Exception("bitcode is required on watchOS/tvOS")
+        if self.settings.os == "watchOS" and self.settings.arch not in ["armv7k", "armv8", "x86", "x86_64"]:
+            raise Exception("watchOS: Only supported archs: [armv7k, armv8, x86, x86_64]")
+
+    def package(self):
+        self.copy("darwin-toolchain.cmake")
 
     def package_info(self):
         darwin_arch = tools.to_apple_arch(self.settings.arch)
+
+        if self.settings.os == "watchOS" and self.settings.arch == "armv8":
+            darwin_arch = "arm64_32"
 
         xcrun = tools.XCRun(self.settings)
         sysroot = xcrun.sdk_path
@@ -73,8 +89,13 @@ class DarwinToolchainConan(ConanFile):
         self.env_info.CPPFLAGS = cflags_str
         self.env_info.CXXFLAGS = cflags_str
         self.env_info.LDFLAGS = ldflags_str
-        # Fixes macOS Mojave (10.14) builds which appends the macOS sysroot to compiler flags.
-        self.env_info.SDKROOT = sysroot
+
+        self.env_info.CONAN_CMAKE_SYSTEM_NAME = self.cmake_system_name
+        if self.settings.get_safe("os.version"):
+            self.env_info.CONAN_CMAKE_OSX_DEPLOYMENT_TARGET = str(self.settings.os.version)
+        self.env_info.CONAN_CMAKE_OSX_ARCHITECTURES = str(darwin_arch)
+        self.env_info.CONAN_CMAKE_SYSROOT = sysroot
+        self.env_info.CONAN_CMAKE_TOOLCHAIN_FILE = os.path.join(self.package_folder, "darwin-toolchain.cmake")
 
     def package_id(self):
         self.info.header_only()
