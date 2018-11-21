@@ -49,7 +49,7 @@ You only need to create a slightly different profile:
     arch=armv7
 
     [build_requires]
-    darwin-toolchain/1.0@theodelrieu/stable
+    darwin-toolchain/1.0.3@theodelrieu/stable
 
 
 ## Bitcode support
