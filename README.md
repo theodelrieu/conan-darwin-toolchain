@@ -25,7 +25,7 @@ Create a profile for cross building and including this toolchain:
     arch=armv7
 
     [build_requires]
-    darwin-toolchain/1.0@theodelrieu/stable
+    darwin-toolchain/1.0.4@theodelrieu/stable
     
 
 Go to your project and cross-build your dependency tree with this toolchain:
@@ -49,7 +49,7 @@ You only need to create a slightly different profile:
     arch=armv7
 
     [build_requires]
-    darwin-toolchain/1.0.3@theodelrieu/stable
+    darwin-toolchain/1.0.4@theodelrieu/stable
 
 
 ## Bitcode support
