@@ -86,6 +86,7 @@ class DarwinToolchainConan(ConanFile):
         self.env_info.STRIP = xcrun.strip
 
         self.env_info.CFLAGS = cflags_str
+        self.env_info.ASFLAGS = cflags_str
         self.env_info.CPPFLAGS = cflags_str
         self.env_info.CXXFLAGS = cflags_str
         self.env_info.LDFLAGS = ldflags_str
