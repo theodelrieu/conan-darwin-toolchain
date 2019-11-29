@@ -7,7 +7,7 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.4"
+    version = "1.0.5"
     license = "Apple"
     settings = "os", "arch", "build_type"
     options = {"bitcode": [True, False]}
@@ -22,6 +22,13 @@ class DarwinToolchainConan(ConanFile):
         if self.settings.os == "Macos":
             return "macOS"
         return str(self.settings.os)
+
+    @property
+    def cmake_system_processor(self):
+        return {"x86": "i386",
+                "x86_64": "x86_64",
+                "armv7": "arm",
+                "armv8": "aarch64"}.get(str(self.settings.arch))
 
     def config_options(self):
         # build_type is only useful for bitcode
@@ -95,7 +102,8 @@ class DarwinToolchainConan(ConanFile):
         if self.settings.get_safe("os.version"):
             self.env_info.CONAN_CMAKE_OSX_DEPLOYMENT_TARGET = str(self.settings.os.version)
         self.env_info.CONAN_CMAKE_OSX_ARCHITECTURES = str(darwin_arch)
-        self.env_info.CONAN_CMAKE_SYSROOT = sysroot
+        self.env_info.CONAN_CMAKE_OSX_SYSROOT = sysroot
+        self.env_info.CONAN_CMAKE_SYSTEM_PROCESSOR = self.cmake_system_processor
         self.env_info.CONAN_CMAKE_TOOLCHAIN_FILE = os.path.join(self.package_folder, "darwin-toolchain.cmake")
 
     def package_id(self):
