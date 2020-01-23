@@ -7,7 +7,7 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.5"
+    version = "1.0.6"
     license = "Apple"
     settings = "os", "arch", "build_type"
     options = {"bitcode": [True, False]}
@@ -20,7 +20,7 @@ class DarwinToolchainConan(ConanFile):
     @property
     def cmake_system_name(self):
         if self.settings.os == "Macos":
-            return "macOS"
+            return "Darwin"
         return str(self.settings.os)
 
     @property
@@ -76,6 +76,7 @@ class DarwinToolchainConan(ConanFile):
         cflags = copy.copy(common_flags)
         cflags.extend(["-arch", darwin_arch])
         self.cpp_info.cflags = cflags
+        self.cpp_info.cxxflags = cflags
         link_flags = copy.copy(common_flags)
         link_flags.append("-arch %s" % darwin_arch)
 
