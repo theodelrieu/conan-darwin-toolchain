@@ -7,9 +7,9 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.6"
+    version = "1.0.7"
     license = "Apple"
-    settings = "os", "arch", "build_type"
+    settings = "os", "arch", "build_type", "os_build", "compiler"
     options = {"bitcode": [True, False]}
     default_options = "bitcode=True"
     description = "Darwin toolchain to (cross) compile macOS/iOS/watchOS/tvOS"
@@ -37,7 +37,8 @@ class DarwinToolchainConan(ConanFile):
             del self.options.bitcode
 
     def configure(self):
-        if platform.system() != "Darwin":
+        # We export recipes on a Linux machine, thus we have to rely on os_build and not sys.platform
+        if self.settings.os_build != "Macos":
             raise Exception("Build machine must be Macos")
         if not tools.is_apple_os(self.settings.os):
             raise Exception("os must be an Apple os")
@@ -75,8 +76,11 @@ class DarwinToolchainConan(ConanFile):
         # CMake issue, for details look https://github.com/conan-io/conan/issues/2378
         cflags = copy.copy(common_flags)
         cflags.extend(["-arch", darwin_arch])
+        cxxflags = copy.copy(cflags)
+        if self.settings.compiler.cppstd:
+            cxxflags.extend(["-std=c++%s" % self.settings.compiler.cppstd])
         self.cpp_info.cflags = cflags
-        self.cpp_info.cxxflags = cflags
+        self.cpp_info.cxxflags = cxxflags
         link_flags = copy.copy(common_flags)
         link_flags.append("-arch %s" % darwin_arch)
 
@@ -85,6 +89,7 @@ class DarwinToolchainConan(ConanFile):
 
         # Set flags in environment too, so that CMake Helper finds them
         cflags_str = " ".join(cflags)
+        cxxflags_str = " ".join(cxxflags)
         ldflags_str = " ".join(link_flags)
         self.env_info.CC = xcrun.cc
         self.env_info.CPP = "%s -E" % xcrun.cc
@@ -96,7 +101,7 @@ class DarwinToolchainConan(ConanFile):
         self.env_info.CFLAGS = cflags_str
         self.env_info.ASFLAGS = cflags_str
         self.env_info.CPPFLAGS = cflags_str
-        self.env_info.CXXFLAGS = cflags_str
+        self.env_info.CXXFLAGS = cxxflags_str
         self.env_info.LDFLAGS = ldflags_str
 
         self.env_info.CONAN_CMAKE_SYSTEM_NAME = self.cmake_system_name

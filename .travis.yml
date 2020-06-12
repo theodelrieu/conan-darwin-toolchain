@@ -4,7 +4,7 @@ python: 3.6
 osx_image: xcode9.3
 env:
    global:
-     - CONAN_REFERENCE: "darwin-toolchain/1.0.6"
+     - CONAN_REFERENCE: "darwin-toolchain/1.0.7"
      - CONAN_USERNAME: "theodelrieu"
      - CONAN_LOGIN_USERNAME: "theodelrieu"
      - CONAN_CHANNEL: "testing"
