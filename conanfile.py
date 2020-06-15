@@ -7,7 +7,7 @@ import copy
 
 class DarwinToolchainConan(ConanFile):
     name = "darwin-toolchain"
-    version = "1.0.7"
+    version = "1.0.8"
     license = "Apple"
     settings = "os", "arch", "build_type", "os_build", "compiler"
     options = {"bitcode": [True, False]}
@@ -77,8 +77,6 @@ class DarwinToolchainConan(ConanFile):
         cflags = copy.copy(common_flags)
         cflags.extend(["-arch", darwin_arch])
         cxxflags = copy.copy(cflags)
-        if self.settings.compiler.cppstd:
-            cxxflags.extend(["-std=c++%s" % self.settings.compiler.cppstd])
         self.cpp_info.cflags = cflags
         self.cpp_info.cxxflags = cxxflags
         link_flags = copy.copy(common_flags)
