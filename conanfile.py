@@ -64,7 +64,7 @@ class DarwinToolchainConan(ConanFile):
         common_flags = ["-isysroot%s" % sysroot]
 
         if self.settings.get_safe("os.version"):
-            common_flags.append(tools.apple_deployment_target_flag(self.settings.os, self.settings.os.version, self.settings.os.sdk))
+            common_flags.append(tools.apple_deployment_target_flag(self.settings.os, self.settings.os.version, os_sdk=self.settings.os.sdk))
 
         if not self.settings.os == "Macos" and self.options.bitcode:
             if self.settings.build_type == "Debug":
